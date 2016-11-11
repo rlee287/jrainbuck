@@ -1,10 +1,38 @@
 package io.github.rlee287.jrainbuck.constants;
 
-public class SwitchList {
+import java.util.HashMap;
+
+public class Constants {
 	//public static final int CLASSIC_SIZE=30000;
 	public static final String[] LIST_SWITCHES={"-file","-input","-output"};
 	/* 0|file   MANDATORY
 	 * 1|stdin  OPTIONAL
 	 * 2|stdout OPTIONAL
+	 */
+	public static final Character[] ALLOWED_CHAR={'[',']','+','-','<','>','.',','};
+	private static HashMap<Character, Byte> INIT_UVB_MAP=
+			new HashMap <Character,Byte>();
+	static {
+		/* JUMP_FORWARD_ZERO 0b1000 0001*/
+		INIT_UVB_MAP.put('[', new Byte((byte)-127));
+		/* JUMP_BACKWARD_NONZERO 0b1000 0000*/
+		INIT_UVB_MAP.put(']', new Byte((byte)-128));
+		/* ARRAY_INCREMENT 0b0100 0001*/
+		INIT_UVB_MAP.put('+', new Byte((byte)65));
+		/* ARRAY_DECREMENT 0b0100 0000*/
+		INIT_UVB_MAP.put('-', new Byte((byte)64));
+		/* POINTER_LEFT 0b0010 0000*/
+		INIT_UVB_MAP.put('<', new Byte((byte)32));
+		/* POINTER_RIGHT 0b0010 0001*/
+		INIT_UVB_MAP.put('>', new Byte((byte)33));
+		/* STDOUT 0b0001 0000*/
+		INIT_UVB_MAP.put('.', new Byte((byte)16));
+		/* STDIN 0b0001 0001*/
+		INIT_UVB_MAP.put(',', new Byte((byte)17));
+	}
+	public static final HashMap<Character,Byte> UVB_MAP=INIT_UVB_MAP;
+	/*
+	 * 0 |0 |0 |0 |0 |0 |0 |0
+	 * []|+-|<>|.,|00|00|00|sign
 	 */
 }
