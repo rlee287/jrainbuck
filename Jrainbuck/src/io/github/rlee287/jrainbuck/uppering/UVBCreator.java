@@ -24,12 +24,37 @@ public class UVBCreator implements UVCreator {
 		 * 0 |0 |0 |0 |0 |0 |0 |0
 		 * []|+-|<>|.,|00|00|00|sign
 		 */
+		int bracketLevel=0;
 		for ( byte inst:rawInput ) {
 			Character in=new Character((char) inst);
 			Byte mapped=Constants.UVB_MAP.get(in);
-			if (mapped!=null) {
-				UVB.add(mapped);
+			if (mapped==null) {
+				//Invalid bytes are comments; ignore them
+			} else {
+				if (mapped==-127 || mapped==-128) {
+					if (mapped==-128) { // ']'
+						bracketLevel--;
+					}
+					if (bracketLevel<63) {
+						UVB.add((byte) (mapped+2*bracketLevel));
+					} else if (bracketLevel<255) {
+						UVB.add((byte) (mapped+2*63));
+						UVB.add((byte) bracketLevel);
+					} else {
+						throw new RuntimeException
+						("Maximum level of bracket nesting exceeded");
+					}
+					if (mapped==-127) { // '['
+						bracketLevel++;
+					}
+				}
+				else {
+					UVB.add(mapped);
+				}
 			}
+		}
+		if (bracketLevel!=0) {
+			throw new RuntimeException("SyntaxError: brackets do not match");
 		}
 	}
 	/* (non-Javadoc)
@@ -56,5 +81,10 @@ public class UVBCreator implements UVCreator {
 			returnUVB[index]=UVB.get(index);
 		}
 		return returnUVB;
+	}
+
+	@Override
+	public char getUVType() {
+		return 'B';
 	}
 }
