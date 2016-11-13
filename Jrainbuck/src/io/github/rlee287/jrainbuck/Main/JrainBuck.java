@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import io.github.rlee287.jrainbuck.constants.Constants;
+import io.github.rlee287.jrainbuck.topend.LITRun;
 import io.github.rlee287.jrainbuck.uppering.UVBCreator;
 import io.github.rlee287.jrainbuck.uppering.UVCreator;
 
@@ -27,6 +28,17 @@ public class JrainBuck {
 		}
 		UVCreator uppering=new UVBCreator(arguments.get("file"));
 		byte[] test=uppering.getUV();
+		for (byte i:test) {
+			System.out.println(i);
+		}
+		LITRun test2=new LITRun(uppering);
+		test2.bracketTable();
+		for (Integer t:test2.rowList.keySet()) {
+			System.out.print(t);
+			System.out.print(" ");
+			System.out.println(test2.rowList.get(t));
+		}
+		test2.execute();
 	}
 
 	public static HashMap <String,String> CommandParse(String[] args) {
